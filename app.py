@@ -17,11 +17,13 @@ db = SQLAlchemy(app)
 
 @app.route('/')
 def index():
-    user = User.query.first()
     movies = Movie.query.all()
-    return render_template('index.html', user=user ,movies=movies)
+    return render_template('index.html' ,movies=movies)
 
-
+@app.context_processor
+def inject_user():
+    user = User.query.first()
+    return dict(user=user)
 
 
 class User(db.Model):# 表名将会是 user（自动生成，小写处理）
@@ -65,6 +67,10 @@ def forge():
 
 
 
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
 
 
 
